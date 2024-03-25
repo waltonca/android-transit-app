@@ -3,7 +3,10 @@ package com.example.transitapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
@@ -59,24 +62,30 @@ fun TransitApp(){
     Scaffold(
         bottomBar = {
             BottomAppBar(
+                //modifier = Modifier.fillMaxSize(),
                 actions = {
-                    IconButton(onClick = { navController.navigate("map") }) {
-                        Icon(
-                            painterResource(id = R.drawable.baseline_map_24),
-                            contentDescription = "Map"
-                        )
-                    }
-                    IconButton(onClick = { navController.navigate("route") }) {
-                        Icon(
-                            painterResource(id = R.drawable.baseline_add_road_24),
-                            contentDescription = "Route"
-                        )
-                    }
-                    IconButton(onClick = { navController.navigate("alert") }) {
-                        Icon(
-                            painterResource(id = R.drawable.baseline_add_alert_24),
-                            contentDescription = "Alert"
-                        )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ){
+                        IconButton(onClick = { navController.navigate("map") }) {
+                            Icon(
+                                painterResource(id = R.drawable.baseline_map_24),
+                                contentDescription = "Map"
+                            )
+                        }
+                        IconButton(onClick = { navController.navigate("route") }) {
+                            Icon(
+                                painterResource(id = R.drawable.baseline_add_road_24),
+                                contentDescription = "Route"
+                            )
+                        }
+                        IconButton(onClick = { navController.navigate("alert") }) {
+                            Icon(
+                                painterResource(id = R.drawable.baseline_add_alert_24),
+                                contentDescription = "Alert"
+                            )
+                        }
                     }
                 }
             )
