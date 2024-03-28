@@ -30,8 +30,16 @@ import com.example.transitapp.ui.theme.TransitAppTheme
 
 class MainActivity : ComponentActivity() {
 
+    private lateinit var mainViewModel: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Initialize ViewModel
+        mainViewModel = MainViewModel()
+
+        // Do something
+        mainViewModel.loadBusPositions() // enqury "route 7A"
+
         setContent {
             TransitAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -44,69 +52,74 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
 
-@Composable
-fun TransitApp(){
-    
-    //test
-    //Text(text = "hello")
 
-    // Step 3: Add scaffolding to display a bottom app bar
+    @Composable
+    fun TransitApp(){
 
-    // The NavHostController manages the screen navigation
-    val navController: NavHostController = rememberNavController()
+        //test
+        //Text(text = "hello")
 
-    //var textFieldLocation by remember { mutableStateOf("") }
+        // Step 3: Add scaffolding to display a bottom app bar
 
-    Scaffold(
-        bottomBar = {
-            BottomAppBar(
-                //modifier = Modifier.fillMaxSize(),
-                actions = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ){
-                        IconButton(onClick = { navController.navigate("map") }) {
-                            Icon(
-                                painterResource(id = R.drawable.baseline_map_24),
-                                contentDescription = "Map"
-                            )
-                        }
-                        IconButton(onClick = { navController.navigate("route") }) {
-                            Icon(
-                                painterResource(id = R.drawable.baseline_add_road_24),
-                                contentDescription = "Route"
-                            )
-                        }
-                        IconButton(onClick = { navController.navigate("alert") }) {
-                            Icon(
-                                painterResource(id = R.drawable.baseline_add_alert_24),
-                                contentDescription = "Alert"
-                            )
+        // The NavHostController manages the screen navigation
+        val navController: NavHostController = rememberNavController()
+
+        // Get GTFS from ViewModel, and the UI will re-compose when ViewModel changes or GTFS data is loaded
+        // val GTFS by mainViewModel.GTFSStateFlow.collectAsState()
+
+        //var textFieldLocation by remember { mutableStateOf("") }
+
+        Scaffold(
+            bottomBar = {
+                BottomAppBar(
+                    //modifier = Modifier.fillMaxSize(),
+                    actions = {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ){
+                            IconButton(onClick = { navController.navigate("map") }) {
+                                Icon(
+                                    painterResource(id = R.drawable.baseline_map_24),
+                                    contentDescription = "Map"
+                                )
+                            }
+                            IconButton(onClick = { navController.navigate("route") }) {
+                                Icon(
+                                    painterResource(id = R.drawable.baseline_add_road_24),
+                                    contentDescription = "Route"
+                                )
+                            }
+                            IconButton(onClick = { navController.navigate("alert") }) {
+                                Icon(
+                                    painterResource(id = R.drawable.baseline_add_alert_24),
+                                    contentDescription = "Alert"
+                                )
+                            }
                         }
                     }
+                )
+            }
+        ) { innerPadding ->
+            // NavHost will display the correct screen
+            NavHost(
+                navController = navController,
+                startDestination = "map",
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                composable(route = "map") {
+                    MapScreen()
                 }
-            )
-        }
-    ) { innerPadding ->
-        // NavHost will display the correct screen
-        NavHost(
-            navController = navController,
-            startDestination = "map",
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(route = "map") {
-                MapScreen()
-            }
-            composable(route = "route") {
-                RouteScreen()
-            }
-            composable(route = "alert") {
-                AlertScreen()
+                composable(route = "route") {
+                    RouteScreen(mainViewModel)
+                }
+                composable(route = "alert") {
+                    AlertScreen()
+                }
             }
         }
-    }
 
+    }
 }
+
