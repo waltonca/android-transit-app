@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,7 +39,7 @@ class MainActivity : ComponentActivity() {
         mainViewModel = MainViewModel()
 
         // Do something
-        mainViewModel.loadBusPositions() // enqury "route 7A"
+        mainViewModel.loadBusPositions()
 
         setContent {
             TransitAppTheme {
@@ -66,7 +67,7 @@ class MainActivity : ComponentActivity() {
         val navController: NavHostController = rememberNavController()
 
         // Get GTFS from ViewModel, and the UI will re-compose when ViewModel changes or GTFS data is loaded
-        // val GTFS by mainViewModel.GTFSStateFlow.collectAsState()
+        //val GTFS by mainViewModel.GTFSStateFlow.collectAsState()
 
         //var textFieldLocation by remember { mutableStateOf("") }
 
@@ -109,13 +110,13 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(route = "map") {
-                    MapScreen()
+                    MapScreen(mainViewModel)
                 }
                 composable(route = "route") {
                     RouteScreen(mainViewModel)
                 }
                 composable(route = "alert") {
-                    AlertScreen()
+                    AlertScreen(mainViewModel)
                 }
             }
         }

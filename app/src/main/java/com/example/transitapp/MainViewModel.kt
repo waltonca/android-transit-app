@@ -2,7 +2,6 @@ package com.example.transitapp
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.transitapp.models.GTFS
 import com.google.transit.realtime.GtfsRealtime
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,9 +10,9 @@ import java.net.URL
 
 class MainViewModel : ViewModel() {
 
-    private val _GTFSStateFlow = MutableStateFlow<GTFS?>(null)
+    private val _GTFSStateFlow = MutableStateFlow<GtfsRealtime.FeedMessage?>(null)
 
-    val GTFSStateFlow : StateFlow<GTFS?> = _GTFSStateFlow.asStateFlow()
+    val GTFSStateFlow: StateFlow<GtfsRealtime.FeedMessage?> = _GTFSStateFlow.asStateFlow()
     fun loadBusPositions() {
         Thread {
             val url = URL("https://gtfs.halifax.ca/realtime/Vehicle/VehiclePositions.pb")
@@ -30,6 +29,9 @@ class MainViewModel : ViewModel() {
                     println("Bus location: ${vehicle.position.longitude},${vehicle.position.latitude}")
                 }
             }
+
+            // Set feed value to the feed value
+             _GTFSStateFlow.value = feed
 
         }.start()
 

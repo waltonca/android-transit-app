@@ -3,7 +3,10 @@ package com.example.transitapp.screens
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.transitapp.MainViewModel
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
@@ -11,8 +14,11 @@ import com.mapbox.maps.MapView
 
 private lateinit var mapView: MapView
 @Composable
-fun MapScreen() {
+fun MapScreen(mainViewModel: MainViewModel) {
     //Text("Map Screen")
+    val GTFS by mainViewModel.GTFSStateFlow.collectAsState()
+
+    //val currentWeather = weather?.current
 
     // AndroidView
     AndroidView(factory = { context ->
@@ -26,6 +32,8 @@ fun MapScreen() {
                 .bearing(0.0)
                 .build()
         )
+        // Add code to display buses
+
         // Add the map view to the activity (you can also add it to other views as a child)
         mapView.apply {  }
 
