@@ -21,6 +21,7 @@ class MainViewModel : ViewModel() {
             // rest of code goes here
             // Here you can examine the 'feed' object to see the GTFS data
             // Console each bus route name(route 7A) and location(long and lati)
+            /* Sprint2 is DONE
             Log.i("testing", "feed: ${feed.toString()}")
             feed.entityList.forEach{ entity ->
                 if(entity.hasVehicle()){
@@ -29,6 +30,7 @@ class MainViewModel : ViewModel() {
                     println("Bus location: ${vehicle.position.longitude},${vehicle.position.latitude}")
                 }
             }
+            */
 
             // Set feed value to the feed value
              _GTFSStateFlow.value = feed
