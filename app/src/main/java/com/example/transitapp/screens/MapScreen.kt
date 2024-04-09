@@ -28,17 +28,23 @@ fun MapScreen(mainViewModel: MainViewModel) {
         // update
         update = { mapView ->
             Log.i("testing2", "GTFSList: ${GTFSList.toString()}")
-            // display sample code first
+            // display GTFS data
             val viewAnnotationManager = mapView.viewAnnotationManager
-            viewAnnotationManager.addViewAnnotation(
-                R.layout.layout,
-                viewAnnotationOptions {
-                    geometry(Point.fromLngLat(-63.60,44.65))
+            GTFSList?.forEach { entity ->
+                if (entity.hasVehicle()) {
+                    val vehicle = entity.vehicle
+                    val point = Point.fromLngLat(vehicle.position.longitude.toDouble(),
+                        vehicle.position.latitude.toDouble()
+                    )
+                    viewAnnotationManager.addViewAnnotation(
+                        R.layout.layout,
+                        viewAnnotationOptions {
+                            geometry(point)
+                        }
+                    )
                 }
-            )
+            }
 
-
-            // update GTFS data in the Map
         },
         factory = { context ->
         // Create a map programmatically and set the initial camera
