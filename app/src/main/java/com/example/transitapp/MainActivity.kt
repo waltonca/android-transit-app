@@ -40,6 +40,7 @@ class MainActivity : ComponentActivity() {
 
         // Do something
         mainViewModel.loadBusPositions()
+        mainViewModel.loadAlerts()
 
         setContent {
             TransitAppTheme {

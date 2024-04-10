@@ -11,8 +11,11 @@ import java.net.URL
 class MainViewModel : ViewModel() {
 
     private val _GTFSStateFlow = MutableStateFlow<GtfsRealtime.FeedMessage?>(null)
-
     val GTFSStateFlow: StateFlow<GtfsRealtime.FeedMessage?> = _GTFSStateFlow.asStateFlow()
+
+    private val _AlertsStateFlow = MutableStateFlow<GtfsRealtime.FeedMessage?>(null)
+    val AlertsStateFlow: StateFlow<GtfsRealtime.FeedMessage?> = _AlertsStateFlow.asStateFlow()
+
     fun loadBusPositions() {
         Thread {
             val url = URL("https://gtfs.halifax.ca/realtime/Vehicle/VehiclePositions.pb")
@@ -37,5 +40,14 @@ class MainViewModel : ViewModel() {
 
         }.start()
 
+    }
+    fun loadAlerts() {
+        Thread {
+            val url = URL("https://gtfs.halifax.ca/realtime/Alert/Alerts.pb")
+            val alerts = GtfsRealtime.FeedMessage.parseFrom(url.openStream())
+            //Log.i("alerts", "feed: ${alerts.toString()}")
+            // Set feed value to the feed value
+            _AlertsStateFlow.value = alerts
+        }.start()
     }
 }
