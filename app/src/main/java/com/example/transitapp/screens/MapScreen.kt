@@ -2,6 +2,7 @@ package com.example.transitapp.screens
 
 
 import android.util.Log
+import android.widget.TextView
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -12,6 +13,7 @@ import com.example.transitapp.R
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
+import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.viewannotation.geometry
 import com.mapbox.maps.viewannotation.viewAnnotationOptions
 
@@ -28,20 +30,30 @@ fun MapScreen(mainViewModel: MainViewModel) {
         // update
         update = { mapView ->
             Log.i("testing2", "GTFSList: ${GTFSList.toString()}")
-            // display GTFS data
+
             val viewAnnotationManager = mapView.viewAnnotationManager
+
+            // display real-time bus locationsRequired: AnnotatedLayerFeature
             GTFSList?.forEach { entity ->
                 if (entity.hasVehicle()) {
                     val vehicle = entity.vehicle
                     val point = Point.fromLngLat(vehicle.position.longitude.toDouble(),
                         vehicle.position.latitude.toDouble()
                     )
-                    viewAnnotationManager.addViewAnnotation(
+
+                    val viewAnnotation = viewAnnotationManager.addViewAnnotation(
                         R.layout.layout,
                         viewAnnotationOptions {
                             geometry(point)
                         }
                     )
+
+                    // Get layout TextView obj，
+                    val annotationTxtView  = viewAnnotation?.findViewById<TextView>(R.id.annotation)
+                    Log.i("MapScreen", "TextView: $annotationTxtView ")
+                    // Set TextView route_id
+                    annotationTxtView?.text = vehicle.trip.routeId
+
                 }
             }
 
