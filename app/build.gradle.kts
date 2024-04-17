@@ -74,4 +74,9 @@ dependencies {
     implementation("com.mapbox.maps:android:11.1.0")
     implementation(group = "org.mobilitydata", name= "gtfs-realtime-bindings", version= "0.0.8")
 
+    // Accompanist permissions
+    implementation ("com.google.accompanist:accompanist-permissions:0.32.0")
+    // Location services
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+
 }

@@ -13,6 +13,8 @@ import com.example.transitapp.R
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
+import com.mapbox.maps.plugin.animation.MapAnimationOptions
+import com.mapbox.maps.plugin.animation.flyTo
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.viewannotation.geometry
 import com.mapbox.maps.viewannotation.viewAnnotationOptions
@@ -25,10 +27,27 @@ fun MapScreen(mainViewModel: MainViewModel) {
     val GTFS by mainViewModel.GTFSStateFlow.collectAsState()
     val GTFSList = GTFS?.entityList
 
+    val userLocation by mainViewModel.userLocationStateFlow.collectAsState()
+    Log.i("Location", "${userLocation}")
+
     // AndroidView
     AndroidView(
         // update
         update = { mapView ->
+            if (userLocation != null) {
+                mapView.mapboxMap.flyTo(
+                    CameraOptions.Builder()
+                        .center(userLocation) // Center the camera at the user's location
+                        .pitch(0.0)
+                        .zoom(14.0)
+                        .bearing(0.0)
+                        .build(),
+                    MapAnimationOptions.mapAnimationOptions {
+                        duration(2000) // Adjust duration as needed
+                    }
+                )
+            }
+
             Log.i("testing2", "GTFSList: ${GTFSList.toString()}")
 
             val viewAnnotationManager = mapView.viewAnnotationManager

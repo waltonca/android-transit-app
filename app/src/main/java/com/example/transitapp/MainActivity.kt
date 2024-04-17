@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,6 +29,9 @@ import com.example.transitapp.screens.AlertScreen
 import com.example.transitapp.screens.MapScreen
 import com.example.transitapp.screens.RouteScreen
 import com.example.transitapp.ui.theme.TransitAppTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
 class MainActivity : ComponentActivity() {
 
@@ -50,6 +54,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     TransitApp()
+                    GetPermission()
                 }
             }
         }
@@ -120,6 +125,24 @@ class MainActivity : ComponentActivity() {
                     AlertScreen(mainViewModel)
                 }
             }
+        }
+
+    }
+
+    @OptIn(ExperimentalPermissionsApi::class)
+    @Composable
+    fun GetPermission(){
+        val permissionState = rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)
+
+        // Permission not granted, request permission
+        if(!permissionState.status.isGranted){
+            LaunchedEffect(permissionState){
+                permissionState.launchPermissionRequest()
+            }
+        }
+        else {
+            // Permission granted, load user's location
+            mainViewModel.setLocation(this@MainActivity)
         }
 
     }
